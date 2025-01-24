@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    public Vector3 offset = new Vector3(5, 0, 0); 
-    public float moveDuration = 2.0f; 
+    [SerializeField] private Vector3 offset = new Vector3(5, 0, 0); 
+    [SerializeField] private float moveDuration = 2.0f; 
 
     private Vector3 pointA;
     private Vector3 pointB;
@@ -12,8 +12,12 @@ public class Enemy : MonoBehaviour
 
     [SerializeField] private float timeAnimation = 1f;
     [SerializeField] private Vector3 rotationAxis = Vector3.right;
+
+    private Transform originalPosition;
+    [SerializeField] private GameObject respawn;
     void Start()
     {
+        originalPosition = transform;
         pointA = transform.position - offset;
         pointB = transform.position + offset;
         StartCoroutine(Move());
@@ -23,6 +27,7 @@ public class Enemy : MonoBehaviour
     {
         StartCoroutine(Rotation());
         Destroy(gameObject, (timeAnimation + 0.5f));
+        Instantiate(respawn, originalPosition.position, Quaternion.identity);
     }
 
     private IEnumerator Move()
